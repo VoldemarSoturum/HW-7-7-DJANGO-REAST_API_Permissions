@@ -1,0 +1,2 @@
+# HW-7-7-DJANGO-REAST_API_Permissions
+HW-7-7-NETOLOGY-DJANGO-REAST_API_Permissions
