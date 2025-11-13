@@ -1,0 +1,18 @@
+django
+djangorestframework
+psycopg2-binary
+django-filter
+
+django-perms
+
+#FOR HTTPS
+django-extensions
+werkzeug
+pyOpenSSL
+
+#Быстрое создание БД
+#CREATE DATABASE netology_app_advertisements;CREATE ROLE netology_advertisements LOGIN PASSWORD 'netology_advertisements'; GRANT ALL PRIVILEGES ON DATABASE netology_app_advertisements TO netology_advertisements;ALTER ROLE netology_advertisements WITH CREATEDB;
+
+#\c netology_app_advertisements
+
+#GRANT USAGE, CREATE ON SCHEMA public TO netology_advertisements; GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO netology_advertisements; GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO netology_advertisements; GRANT ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA public TO netology_advertisements; ALTER DEFAULT PRIVILEGES FOR ROLE netology_advertisements IN SCHEMA public GRANT ALL ON TABLES TO netology_advertisements; ALTER DEFAULT PRIVILEGES FOR ROLE netology_advertisements IN SCHEMA public GRANT ALL ON SEQUENCES TO netology_advertisements; ALTER DEFAULT PRIVILEGES FOR ROLE netology_advertisements IN SCHEMA public GRANT ALL ON FUNCTIONS TO netology_advertisements;

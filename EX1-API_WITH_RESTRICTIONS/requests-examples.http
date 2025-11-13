@@ -1,0 +1,280 @@
+@host = https://127.0.0.1:8000
+@baseUrl = {{host}}/api
+
+# ==== Ручные переменные ====
+# Токен владельца объявлений user1
+@token1 = 0cb79c9c6b2a09ab1f70e47decc86690247f7d5b
+# Токен другого пользователя user2
+@token2 = c0ae99b612b6d0ae1b66300f4d46a18e387308c8
+
+# Числовые ID пользователей (creator.id)
+@creator_id_user1 = 8
+@creator_id_user2 = 2
+
+# Числовые ID объявлений (pk) — укажи реальные ID из БД/ответов
+# ad_id_user1 — объявление, созданное user1
+@ad_id_user1 = 1
+# ad_id_user2 — объявление, созданное user2
+@ad_id_user2 = 2
+
+# ==== Подготовка ====
+# 1) Сервер в HTTPS:
+#    python manage.py runserver_plus --cert-file cert.pem 0.0.0.0:8000
+# 2) VS Code → Settings: "rest-client.ignoreSSL": true
+
+###
+# Получить токен по логину/паролю — возьми из ответа и вставь в @token1
+POST {{host}}/api-token-auth/
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "admin"
+}
+
+###
+# Получить токен по логину/паролю — возьми из ответа и вставь в @token2
+POST {{host}}/api-token-auth/
+Content-Type: application/json
+
+{
+  "username": "alice",
+  "password": "alicePrincess"
+}
+
+# =====================================
+#    БЛОК A: Создание и базовая проверка
+# =====================================
+
+###
+# A1. Список объявлений (анонимно)
+GET {{baseUrl}}/advertisements/
+Content-Type: application/json
+
+###
+# A2. Создать объявление от user1 (OPEN)
+#  — после создания возьми id из ответа и запиши в @ad_id_user1 сверху
+POST {{baseUrl}}/advertisements/
+Content-Type: application/json
+Authorization: Token {{token1}}
+
+{
+  "title": "Стол из дуба (user1)",
+  "description": "Продам стол, состояние отличное",
+  "status": "OPEN"
+}
+
+###
+# A3. Создать объявление от user2 (OPEN)
+#  — после создания возьми id из ответа и запиши в @ad_id_user2 сверху
+POST {{baseUrl}}/advertisements/
+Content-Type: application/json
+Authorization: Token {{token2}}
+
+{
+  "title": "Кресло (user2)",
+  "description": "Комфортное, почти новое",
+  "status": "OPEN"
+}
+
+###
+# A4. Детали объявления user1 (анонимно)
+GET {{baseUrl}}/advertisements/{{ad_id_user1}}/
+Content-Type: application/json
+
+# =====================================
+#    БЛОК B: ФИЛЬТРАЦИЯ
+# =====================================
+
+###
+# B1. По статусу (OPEN)
+GET {{baseUrl}}/advertisements/?status=OPEN
+Content-Type: application/json
+
+###
+# B2. По статусу (CLOSED)
+GET {{baseUrl}}/advertisements/?status=CLOSED
+Content-Type: application/json
+
+###
+# B3. По автору (user1)
+GET {{baseUrl}}/advertisements/?creator={{creator_id_user1}}
+Content-Type: application/json
+
+###
+# B4. По автору (user2)
+GET {{baseUrl}}/advertisements/?creator={{creator_id_user2}}
+Content-Type: application/json
+
+###
+# B5. По интервалу дат (до даты)
+GET {{baseUrl}}/advertisements/?created_at_before=2099-01-01T00:00:00
+Content-Type: application/json
+
+###
+# B6. Комбинированный: статус=OPEN и автор=user1
+GET {{baseUrl}}/advertisements/?status=OPEN&creator={{creator_id_user1}}
+Content-Type: application/json
+
+# =====================================
+#    БЛОК C: ПРАВА ДОСТУПА (permissions)
+# =====================================
+
+###
+# C1. user2 пытается изменить ЧУЖОЕ объявление user1 — ожидаем 403
+PATCH {{baseUrl}}/advertisements/{{ad_id_user1}}/
+Content-Type: application/json
+Authorization: Token {{token2}}
+
+{
+  "status": "CLOSED"
+}
+
+###
+# C2. user2 пытается удалить ЧУЖОЕ объявление user1 — ожидаем 403
+DELETE {{baseUrl}}/advertisements/{{ad_id_user1}}/
+Authorization: Token {{token2}}
+
+###
+# C3. Попытка удалить без токена — ожидаем 401
+DELETE {{baseUrl}}/advertisements/{{ad_id_user1}}/
+
+###
+# C4. Владелец (user1) удаляет СВОЁ объявление — ожидаем 204
+DELETE {{baseUrl}}/advertisements/{{ad_id_user1}}/
+Authorization: Token {{token1}}
+
+###
+# C5. (зеркально) user1 пытается изменить ЧУЖОЕ объявление user2 — ожидаем 200 (так как user1 -- это Админ)
+PATCH {{baseUrl}}/advertisements/{{ad_id_user2}}/
+Content-Type: application/json
+Authorization: Token {{token1}}
+
+{
+  "status": "CLOSED"
+}
+
+# =====================================
+#    БЛОК D: ТРОТТЛИНГ (rate limit)
+#    anon: 10/min  |  user: 20/min
+# =====================================
+
+# D1. Анонимный троттлинг — дерни подряд (>10 раз за минуту) → 429
+###
+GET {{baseUrl}}/advertisements/
+
+###
+# D2. Троттлинг авторизованного (user1) — дерни подряд (>20 раз за минуту) → 429
+GET {{baseUrl}}/advertisements/  
+Authorization: Token {{token1}}
+
+# =====================================
+#    БЛОК E: Валидация (11-е OPEN = 400)
+# =====================================
+
+###
+#  Создай 10 объявлений OPEN от user1 (используй @token1)
+# 11-я попытка создать OPEN — ожидаем 400 ValidationError
+# По достижению ОБЩЕГО числа созданных объявлений 10
+# на запрос 11-го объявления — 400 ValidationError
+# Дёрни 11 раз запрос
+POST {{baseUrl}}/advertisements/
+Content-Type: application/json
+Authorization: Token {{token1}}
+
+{
+  "title": "OPEN demo",
+  "description": "demo",
+  "status": "OPEN"
+}
+
+# =====================================
+#    БЛОК F: Избранные объявления
+# =====================================
+
+###
+# F1. Добавить в избранное как user2 чужое объявление (user1)
+POST {{baseUrl}}/advertisements/{{ad_id_user1}}/favorite/
+Authorization: Token {{token2}}
+
+###
+# F2. Попытка добавить СВОЁ объявление в избранное (ожидаем 400)
+POST {{baseUrl}}/advertisements/{{ad_id_user1}}/favorite/
+Authorization: Token {{token1}}
+
+###
+# F3. Список МОИХ избранных (user2)
+GET {{baseUrl}}/advertisements/favorites/
+Authorization: Token {{token2}}
+
+###
+# F4. Фильтр по избранным в ОБЩЕМ списке (user2)
+GET {{baseUrl}}/advertisements/?favorite=true
+Authorization: Token {{token2}}
+
+# =====================================
+#    БЛОК G: Видимость DRAFT
+# =====================================
+# Шаг 0: создаём объявление в статусе DRAFT от user1 и user2
+
+@draftUser2 = 30
+
+@draftUser1 = 31
+
+### @name create_draft_user2
+POST {{baseUrl}}/advertisements/
+Content-Type: application/json
+Authorization: Token {{token2}}
+
+{
+  "title": "DRAFT demo (user2)",
+  "description": "виден только автору и админу",
+  "status": "DRAFT"
+}
+
+
+### @name create_draft_user1
+POST {{baseUrl}}/advertisements/
+Content-Type: application/json
+Authorization: Token {{token1}}
+
+{
+  "title": "DRAFT demo (user1)",
+  "description": "виден только автору и админу",
+  "status": "DRAFT"
+}
+
+###
+# G0.1 Автор (user2) получает детали своего DRAFT — ожидаем 200
+GET {{baseUrl}}/advertisements/{{draftUser2}}/
+Authorization: Token {{token2}}
+
+###
+# G1. Автор (user2) видит СВОИ DRAFT в списке — ожидаем, что есть как минимум 1 запись
+GET {{baseUrl}}/advertisements/?status=DRAFT
+Authorization: Token {{token2}}
+
+###
+# G2. Другой пользователь (user2) НЕ видит DRAFT автора (user1) в списке — ожидаем список без DRAFT от user1
+GET {{baseUrl}}/advertisements/?status=DRAFT
+Authorization: Token {{token2}}
+
+###
+# G2.1 Другой пользователь (user2) попробует открыть детали конкретного DRAFT — ожидаем 404
+GET {{baseUrl}}/advertisements/{{draftUser1}}/
+Authorization: Token {{token2}}
+
+###
+# G3. Админ видит все DRAFT (если token1 — админ) — ожидаем, что запись видна
+GET {{baseUrl}}/advertisements/?status=DRAFT
+Authorization: Token {{token1}}
+
+### 
+#G3.1 Админ/автор может перевести DRAFT → OPEN, после чего его увидят все
+PATCH {{baseUrl}}/advertisements/{{draftUser2}}/
+Content-Type: application/json
+Authorization: Token {{token1}}
+
+{
+  "status": "OPEN"
+}
