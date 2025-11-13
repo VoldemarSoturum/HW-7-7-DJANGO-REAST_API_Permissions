@@ -4,8 +4,8 @@
 - Аутентификация по токену (DRF authtoken).
 - Права: читать — всем; **менять/удалять** — **владелец** или **админ** (is_staff).
 - Фильтрация по автору, статусу (`OPEN/CLOSED/DRAFT`), интервалам даты.
-- Бизнес-валидация: не более **10** объявлений в статусе **OPEN** на пользователя.
-- Троттлинг: **anon 10/мин**, **user 20/мин**.
+- Валидация: не более **10** объявлений в статусе **OPEN** на пользователя.
+- Троттлинг: **для неавторизованных пользователей 10/мин**, **для авторизованных пользователей 20/мин**.
 - **Дополнительно**: избранные объявления (favorite/unfavorite/favorites, фильтр `?favorite=true`).
 - **Дополнительно**: статус **DRAFT** — виден только автору и админу.
 
@@ -393,70 +393,73 @@ Authorization: Token {{token1}}
 ## Скриншоты по запросам
 
 Положи скриншоты в `docs/screenshots/` и вставь сюда:
-
+### Получение и добавление токенов
+- 1 ![Get_user1_token](https://github.com/VoldemarSoturum/HW-7-7-DJANGO-REAST_API_Permissions/blob/main/EX1-API_WITH_RESTRICTIONS/OUT_DATA_7-7/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%202025-11-13%20133116.png)
+- 2 ![Get_user2_token](https://github.com/VoldemarSoturum/HW-7-7-DJANGO-REAST_API_Permissions/blob/main/EX1-API_WITH_RESTRICTIONS/OUT_DATA_7-7/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%202025-11-13%20133141.png)
+  
 ### A — создание/база
-- A1 ![A1_list](docs/screenshots/A1_list.png)
-- A2 ![A2_create_user1](docs/screenshots/A2_create_user1.png)
-- A3 ![A3_create_user2](docs/screenshots/A3_create_user2.png)
-- A4 ![A4_detail_user1](docs/screenshots/A4_detail_user1.png)
+- A1 ![A1_list](https://github.com/VoldemarSoturum/HW-7-7-DJANGO-REAST_API_Permissions/blob/main/EX1-API_WITH_RESTRICTIONS/OUT_DATA_7-7/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%202025-11-13%20133239.png)
+- A2 ![A2_create_user1](https://github.com/VoldemarSoturum/HW-7-7-DJANGO-REAST_API_Permissions/blob/main/EX1-API_WITH_RESTRICTIONS/OUT_DATA_7-7/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%202025-11-13%20133311.png)
+- A3 ![A3_create_user2](https://github.com/VoldemarSoturum/HW-7-7-DJANGO-REAST_API_Permissions/blob/main/EX1-API_WITH_RESTRICTIONS/OUT_DATA_7-7/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%202025-11-13%20133351.png)
+- A4 ![A4_detail_user1](https://github.com/VoldemarSoturum/HW-7-7-DJANGO-REAST_API_Permissions/blob/main/EX1-API_WITH_RESTRICTIONS/OUT_DATA_7-7/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%202025-11-13%20133519.png)
 
 ### B — фильтрация
-- B1 ![B1_open](docs/screenshots/B1_open.png)
-- B2 ![B2_closed](docs/screenshots/B2_closed.png)
-- B3 ![B3_creator_user1](docs/screenshots/B3_creator_user1.png)
-- B4 ![B4_creator_user2](docs/screenshots/B4_creator_user2.png)
-- B5 ![B5_date_before](docs/screenshots/B5_date_before.png)
-- B6 ![B6_open_user1](docs/screenshots/B6_open_user1.png)
+- B1 ![B1_open](https://github.com/VoldemarSoturum/HW-7-7-DJANGO-REAST_API_Permissions/blob/main/EX1-API_WITH_RESTRICTIONS/OUT_DATA_7-7/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%202025-11-13%20133543.png)
+- B2 ![B2_closed](https://github.com/VoldemarSoturum/HW-7-7-DJANGO-REAST_API_Permissions/blob/main/EX1-API_WITH_RESTRICTIONS/OUT_DATA_7-7/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%202025-11-13%20133606.png)
+- B3 ![B3_creator_user1](https://github.com/VoldemarSoturum/HW-7-7-DJANGO-REAST_API_Permissions/blob/main/EX1-API_WITH_RESTRICTIONS/OUT_DATA_7-7/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%202025-11-13%20133633.png)
+- B4 ![B4_creator_user2](https://github.com/VoldemarSoturum/HW-7-7-DJANGO-REAST_API_Permissions/blob/main/EX1-API_WITH_RESTRICTIONS/OUT_DATA_7-7/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%202025-11-13%20133655.png)
+- B5 ![B5_date_before](https://github.com/VoldemarSoturum/HW-7-7-DJANGO-REAST_API_Permissions/blob/main/EX1-API_WITH_RESTRICTIONS/OUT_DATA_7-7/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%202025-11-13%20133719.png)
+- B6 ![B6_open_user1](https://github.com/VoldemarSoturum/HW-7-7-DJANGO-REAST_API_Permissions/blob/main/EX1-API_WITH_RESTRICTIONS/OUT_DATA_7-7/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%202025-11-13%20133745.png)
 
 ### C — права
-- C1 ![C1_patch_foreign_403](docs/screenshots/C1_patch_foreign_403.png)
-- C2 ![C2_delete_foreign_403](docs/screenshots/C2_delete_foreign_403.png)
-- C3 ![C3_delete_no_token_401](docs/screenshots/C3_delete_no_token_401.png)
-- C4 ![C4_delete_own_204](docs/screenshots/C4_delete_own_204.png)
-- C5 ![C5_admin_or_forbidden](docs/screenshots/C5_admin_or_forbidden.png)
+- C1 ![C1_patch_foreign_403](https://github.com/VoldemarSoturum/HW-7-7-DJANGO-REAST_API_Permissions/blob/main/EX1-API_WITH_RESTRICTIONS/OUT_DATA_7-7/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%202025-11-13%20134215.png)
+- C2 ![C2_delete_foreign_403](https://github.com/VoldemarSoturum/HW-7-7-DJANGO-REAST_API_Permissions/blob/main/EX1-API_WITH_RESTRICTIONS/OUT_DATA_7-7/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%202025-11-13%20134242.png)
+- C3 ![C3_delete_no_token_401](https://github.com/VoldemarSoturum/HW-7-7-DJANGO-REAST_API_Permissions/blob/main/EX1-API_WITH_RESTRICTIONS/OUT_DATA_7-7/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%202025-11-13%20134302.png)
+- C4 ![C4_delete_own_204](https://github.com/VoldemarSoturum/HW-7-7-DJANGO-REAST_API_Permissions/blob/main/EX1-API_WITH_RESTRICTIONS/OUT_DATA_7-7/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%202025-11-13%20134323.png)
+- C5 ![C5_admin_or_forbidden](https://github.com/VoldemarSoturum/HW-7-7-DJANGO-REAST_API_Permissions/blob/main/EX1-API_WITH_RESTRICTIONS/OUT_DATA_7-7/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%202025-11-13%20134352.png)
 
 ### D — троттлинг
-- D1 ![D1_throttle_anon_429](docs/screenshots/D1_throttle_anon_429.png)
-- D2 ![D2_throttle_user_429](docs/screenshots/D2_throttle_user_429.png)
+- D1 ![D1_throttle_anon_429](https://github.com/VoldemarSoturum/HW-7-7-DJANGO-REAST_API_Permissions/blob/main/EX1-API_WITH_RESTRICTIONS/OUT_DATA_7-7/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%202025-11-13%20134422.png)
+- D2 ![D2_throttle_user_429](https://github.com/VoldemarSoturum/HW-7-7-DJANGO-REAST_API_Permissions/blob/main/EX1-API_WITH_RESTRICTIONS/OUT_DATA_7-7/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%202025-11-13%20134456.png)
 
 ### E — валидация
-- E1–E10 ![E1_E10_open_created](docs/screenshots/E1_E10_open_created.png)
-- E11 ![E11_open_400](docs/screenshots/E11_open_400.png)
+- E11 ![E11_open_400](https://github.com/VoldemarSoturum/HW-7-7-DJANGO-REAST_API_Permissions/blob/main/EX1-API_WITH_RESTRICTIONS/OUT_DATA_7-7/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%202025-11-13%20134646.png)
 
 ### F — избранное
-- F1 ![F1_favorite_add](docs/screenshots/F1_favorite_add.png)
-- F2 ![F2_favorite_self_400](docs/screenshots/F2_favorite_self_400.png)
-- F3 ![F3_favorites_list](docs/screenshots/F3_favorites_list.png)
-- F4 ![F4_favorites_filter](docs/screenshots/F4_favorites_filter.png)
+- F1 ![F1_favorite_add](https://github.com/VoldemarSoturum/HW-7-7-DJANGO-REAST_API_Permissions/blob/main/EX1-API_WITH_RESTRICTIONS/OUT_DATA_7-7/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%202025-11-13%20135449.png)
+- F2 ![F2_favorite_self_400](https://github.com/VoldemarSoturum/HW-7-7-DJANGO-REAST_API_Permissions/blob/main/EX1-API_WITH_RESTRICTIONS/OUT_DATA_7-7/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%202025-11-13%20135634.png)
+- F3 ![F3_favorites_list](https://github.com/VoldemarSoturum/HW-7-7-DJANGO-REAST_API_Permissions/blob/main/EX1-API_WITH_RESTRICTIONS/OUT_DATA_7-7/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%202025-11-13%20135659.png)
+- F4 ![F4_favorites_filter](https://github.com/VoldemarSoturum/HW-7-7-DJANGO-REAST_API_Permissions/blob/main/EX1-API_WITH_RESTRICTIONS/OUT_DATA_7-7/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%202025-11-13%20135723.png)
 
 ### G — DRAFT
-- G0.1 ![G0_1_get_draft_author](docs/screenshots/G0_1_get_draft_author.png)
-- G1 ![G1_draft_list_author](docs/screenshots/G1_draft_list_author.png)
-- G2 ![G2_draft_list_other](docs/screenshots/G2_draft_list_other.png)
-- G2.1 ![G2_1_draft_detail_404](docs/screenshots/G2_1_draft_detail_404.png)
-- G3 ![G3_draft_list_admin](docs/screenshots/G3_draft_list_admin.png)
-- G3.1 ![G3_1_draft_to_open](docs/screenshots/G3_1_draft_to_open.png)
+- 00.1 ![Create_druft_massage_user2](https://github.com/VoldemarSoturum/HW-7-7-DJANGO-REAST_API_Permissions/blob/main/EX1-API_WITH_RESTRICTIONS/OUT_DATA_7-7/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%202025-11-13%20144912.png)
+- 00.1 ![Create_draft_message_user1](https://github.com/VoldemarSoturum/HW-7-7-DJANGO-REAST_API_Permissions/blob/main/EX1-API_WITH_RESTRICTIONS/OUT_DATA_7-7/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%202025-11-13%20144956.png)
+- G0.1 ![G0_1_get_draft_author](https://github.com/VoldemarSoturum/HW-7-7-DJANGO-REAST_API_Permissions/blob/main/EX1-API_WITH_RESTRICTIONS/OUT_DATA_7-7/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%202025-11-13%20145903.png)
+- G1 ![G1_draft_list_author](https://github.com/VoldemarSoturum/HW-7-7-DJANGO-REAST_API_Permissions/blob/main/EX1-API_WITH_RESTRICTIONS/OUT_DATA_7-7/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%202025-11-13%20145936.png)
+- G2.1 ![G2_1_draft_detail_404](https://github.com/VoldemarSoturum/HW-7-7-DJANGO-REAST_API_Permissions/blob/main/EX1-API_WITH_RESTRICTIONS/OUT_DATA_7-7/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%202025-11-13%20150500.png)
+- G3 ![G3_draft_list_admin](https://github.com/VoldemarSoturum/HW-7-7-DJANGO-REAST_API_Permissions/blob/main/EX1-API_WITH_RESTRICTIONS/OUT_DATA_7-7/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%202025-11-13%20150546.png)
+- G3.1 ![G3_1_draft_to_open](https://github.com/VoldemarSoturum/HW-7-7-DJANGO-REAST_API_Permissions/blob/main/EX1-API_WITH_RESTRICTIONS/OUT_DATA_7-7/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%202025-11-13%20150858.png)
 
 ---
 
 ## Скриншоты админки
 
 - Пользователи — `https://127.0.0.1:8000/admin/auth/user/`  
-  ![Admin-Users](docs/screenshots/admin_users.png)
+  ![Admin-Users](https://github.com/VoldemarSoturum/HW-7-7-DJANGO-REAST_API_Permissions/blob/main/EX1-API_WITH_RESTRICTIONS/OUT_DATA_7-7/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%202025-11-13%20133032.png)
 
 - Токены — `https://127.0.0.1:8000/admin/authtoken/tokenproxy/`  
-  ![Admin-Tokens](docs/screenshots/admin_tokens.png)
+  ![Admin-Tokens](https://github.com/VoldemarSoturum/HW-7-7-DJANGO-REAST_API_Permissions/blob/main/EX1-API_WITH_RESTRICTIONS/OUT_DATA_7-7/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%202025-11-13%20132941.png)
 
 - Объявления — `https://127.0.0.1:8000/admin/advertisements/advertisement/`  
-  ![Admin-Advertisements](docs/screenshots/admin_advertisements.png)
+  ![Admin-Advertisements](https://github.com/VoldemarSoturum/HW-7-7-DJANGO-REAST_API_Permissions/blob/main/EX1-API_WITH_RESTRICTIONS/OUT_DATA_7-7/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%202025-11-13%20151156.png)
 
 - Избранные — `https://127.0.0.1:8000/admin/advertisements/favorite/`  
-  ![Admin-Favorites](docs/screenshots/admin_favorites.png)
+  ![Admin-Favorites](https://github.com/VoldemarSoturum/HW-7-7-DJANGO-REAST_API_Permissions/blob/main/EX1-API_WITH_RESTRICTIONS/OUT_DATA_7-7/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%202025-11-13%20151136.png)
 
 ---
 
 ## Диаграмма БД (DBeaver)
-![DB-Diagram](docs/screenshots/db_diagram.png)
+![DB-Diagram](https://github.com/VoldemarSoturum/HW-7-7-DJANGO-REAST_API_Permissions/blob/main/EX1-API_WITH_RESTRICTIONS/OUT_DATA_7-7/netology_app_advertisements%20-%20public.png)
 
 ---
 
@@ -488,4 +491,69 @@ api_with_restrictions/
 │  ├─ permissions.py
 │  └─ admin.py
 └─ manage.py
+```
+```
+API with Restrictions — Справка по ответам сервера (TXT)
+
+Легенда статусов:
+200 OK            — Успешно (возвращает JSON)
+201 Created       — Создано (возвращает JSON созданного объекта)
+204 No Content    — Успешно (тело пустое)
+400 Bad Request   — Ошибка валидации/данных запроса
+401 Unauthorized  — Нет или неверные учетные данные (токен)
+403 Forbidden     — Нет прав (не владелец и не админ), но аутентификация есть
+404 Not Found     — Объект не найден или скрыт политикой видимости (например, чужой DRAFT)
+429 Too Many Requests — Превышен лимит запросов (троттлинг)
+
+Общие заголовки ответа: Content-Type: application/json (кроме 204)
+DRF тексты по умолчанию: "Authentication credentials were not provided.", "You do not have permission to perform this action.",
+"Request was throttled. Expected available in X seconds.", и т.д.
+
+==============================================================================================
+| Контекст / Endpoint                                        | Метод  | Треб. Auth | Возможные статусы и когда                                         |
+|------------------------------------------------------------|--------|------------|-------------------------------------------------------------------|
+| Получить токен: /api-token-auth/                           | POST   | нет        | 200 — валидные логин/пароль ({"token": "…"})                      |
+|                                                            |        |            | 400 — неверные креды / невалидный JSON                            |
+| Список объявлений: /api/advertisements/                    | GET    | нет        | 200 — список                                                       |
+|                                                            |        |            | 429 — превышен лимит (anon 10/мин, user 20/мин)                   |
+| Создать объявление: /api/advertisements/                   | POST   | да         | 201 — создано                                                      |
+|                                                            |        |            | 400 — валидация (например, >10 OPEN у автора)                     |
+|                                                            |        |            | 401 — нет токена                                                   |
+|                                                            |        |            | 429 — троттлинг                                                    |
+| Детали объявления: /api/advertisements/{id}/               | GET    | нет        | 200 — найден                                                       |
+|                                                            |        |            | 404 — нет такого id или чужой DRAFT                               |
+|                                                            |        |            | 429 — троттлинг                                                    |
+| Изменить объявление: /api/advertisements/{id}/             | PATCH  | да         | 200 — изменено                                                     |
+|                                                            |        |            | 400 — валидация (например, перевод в OPEN при лимите)             |
+|                                                            |        |            | 401 — нет токена                                                   |
+|                                                            |        |            | 403 — не владелец и не админ                                       |
+|                                                            |        |            | 404 — нет такого id / не видно (чужой DRAFT)                      |
+|                                                            |        |            | 429 — троттлинг                                                    |
+| Удалить объявление: /api/advertisements/{id}/              | DELETE | да         | 204 — удалено                                                      |
+|                                                            |        |            | 401 — нет токена                                                   |
+|                                                            |        |            | 403 — не владелец и не админ                                       |
+|                                                            |        |            | 404 — нет такого id / не видно (чужой DRAFT)                      |
+|                                                            |        |            | 429 — троттлинг                                                    |
+| Добавить в избранное: /api/advertisements/{id}/favorite/   | POST   | да         | 201 — добавлено в избранное                                        |
+|                                                            |        |            | 200 — уже было в избранном (idempotent get_or_create)             |
+|                                                            |        |            | 400 — нельзя добавить своё объявление                              |
+|                                                            |        |            | 401 — нет токена                                                   |
+|                                                            |        |            | 404 — id не существует или не виден (например, чужой DRAFT)       |
+|                                                            |        |            | 429 — троттлинг                                                    |
+| Удалить из избранного: /api/advertisements/{id}/unfavorite/| DELETE | да         | 204 — удалено (idempotent; ок даже если записи не было)           |
+|                                                            |        |            | 401 — нет токена                                                   |
+|                                                            |        |            | 404 — id не существует или не виден                               |
+|                                                            |        |            | 429 — троттлинг                                                    |
+| Мои избранные: /api/advertisements/favorites/              | GET    | да         | 200 — список                                                       |
+|                                                            |        |            | 401 — нет токена                                                   |
+|                                                            |        |            | 429 — троттлинг                                                    |
+| Фильтрация (query params: creator, status, dates, favorite)| GET    | см. выше   | 200 — список (пустой, если ничего не найдено)                     |
+|                                                            |        |            | 429 — троттлинг                                                    |
+==============================================================================================
+
+Дополнительно по бизнес-правилам/видимости:
+- Статус DRAFT видят только автор и админ. Для остальных детальный доступ вернёт 404.
+- Лимит объявлений OPEN: у одного пользователя не более 10. 11-я попытка создания/перевода в OPEN → 400.
+- Админ (is_staff=True) может редактировать/удалять любые объявления (200/204 вместо 403).
+- Троттлинг DRF: anon — 10/мин, user — 20/мин. Превышение → 429 с текстом ожидания.
 ```
